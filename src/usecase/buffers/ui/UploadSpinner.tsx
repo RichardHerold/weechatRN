@@ -23,7 +23,7 @@ const UploadSpinner: React.FC = () => {
         }
       ]
     };
-  }, [rotation.value]);
+  });
 
   useEffect(() => {
     rotation.value = withRepeat(

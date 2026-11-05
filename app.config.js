@@ -1,5 +1,9 @@
 const IS_PROD = process.env.APP_VARIANT === 'production';
 
+// Your EAS project, created with `npx eas-cli init`. Builds, push
+// notifications and over-the-air updates all hang off it.
+const EAS_PROJECT_ID = undefined;
+
 export default {
   name: IS_PROD ? 'WeechatRN' : 'WeechatRN (Dev)',
   description: 'Weechat relay client using websockets',
@@ -7,8 +11,8 @@ export default {
   newArchEnabled: true,
   ios: {
     bundleIdentifier: IS_PROD
-      ? 'com.matthoran.weechatrn'
-      : 'com.matthoran.weechatrn.dev',
+      ? 'com.richardherold.weechatrn'
+      : 'com.richardherold.weechatrn.dev',
     supportsTablet: true,
     config: {
       usesNonExemptEncryption: false
@@ -24,6 +28,8 @@ export default {
     },
     buildNumber: '1'
   },
+  // Android keeps the upstream package name: google-services.json (push via
+  // Firebase) is registered to it.
   android: {
     package: IS_PROD
       ? 'com.matthoran.weechatrn'
@@ -64,17 +70,19 @@ export default {
     '@react-native-vector-icons/material-design-icons',
     'expo-system-ui'
   ],
-  updates: {
-    fallbackToCacheTimeout: 0,
-    url: 'https://u.expo.dev/5e51d3f0-dc9c-11e8-9dfe-b9e5abc941a4'
-  },
   assetBundlePatterns: ['**/*'],
-  githubUrl: 'https://github.com/mhoran/weechatRN',
-  extra: {
-    eas: {
-      projectId: '5e51d3f0-dc9c-11e8-9dfe-b9e5abc941a4'
+  githubUrl: 'https://github.com/RichardHerold/weechatRN',
+  ...(EAS_PROJECT_ID && {
+    updates: {
+      fallbackToCacheTimeout: 0,
+      url: `https://u.expo.dev/${EAS_PROJECT_ID}`
+    },
+    extra: {
+      eas: {
+        projectId: EAS_PROJECT_ID
+      }
     }
-  },
+  }),
   ...(IS_PROD && {
     runtimeVersion: {
       policy: 'appVersion'

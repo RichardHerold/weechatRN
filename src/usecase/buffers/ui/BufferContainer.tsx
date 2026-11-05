@@ -31,9 +31,9 @@ import { getParseArgs } from '../../../lib/helpers/parse-text-args';
 import { formatUrl } from '../../../lib/helpers/url-formatter';
 import type RelayClient from '../../../lib/weechat/client';
 import { renderWeechatFormat } from '../../../lib/weechat/color-formatter';
-import { cwf } from '../../../lib/weechat/colors';
 import { KeyCommandView } from '../../../native/KeyCommandView';
 import type { StoreState } from '../../../store';
+import { palette } from '../../shared/palette';
 import * as actions from '../../../store/actions';
 import Buffer from './Buffer';
 import UploadButton from './UploadButton';
@@ -326,8 +326,8 @@ class BufferContainer extends React.PureComponent<Props, State> {
                 placeholder={
                   buffer.short_name ? `Message ${buffer.short_name}` : 'Message'
                 }
-                placeholderTextColor={colors.placeholder}
-                selectionColor={colors.accent}
+                placeholderTextColor={palette.dim}
+                selectionColor={palette.accent}
                 keyboardAppearance="dark"
                 onChangeText={this.handleChangeText}
                 onFocus={this.handleOnFocus}
@@ -354,7 +354,7 @@ class BufferContainer extends React.PureComponent<Props, State> {
                   exiting={FadeOutRight}
                   name="keyboard-tab"
                   size={24}
-                  color="white"
+                  color={palette.dim}
                 />
               </TouchableOpacity>
             )}
@@ -372,7 +372,7 @@ class BufferContainer extends React.PureComponent<Props, State> {
                 <MaterialIcons
                   name="arrow-upward"
                   size={20}
-                  color={colors.onAccent}
+                  color={palette.onAccent}
                 />
               </View>
             </TouchableOpacity>
@@ -385,31 +385,23 @@ class BufferContainer extends React.PureComponent<Props, State> {
 
 export default connector(BufferContainer);
 
-// The field takes the message list's color so it reads as part of the chat.
-// The send button and caret use WeeChat's light cyan; amber stays reserved
-// for highlights.
-const colors = {
-  field: '#2e3440',
-  fieldBorder: '#4c566a',
-  text: '#eceff4',
-  placeholder: '#9aa3b2',
-  accent: cwf.lightcyan,
-  onAccent: '#0b3b38'
-};
-
 const styles = StyleSheet.create({
   topic: {
-    backgroundColor: '#222'
+    backgroundColor: palette.surface,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: palette.line,
+    paddingHorizontal: 12,
+    paddingVertical: 8
   },
   link: {
     textDecorationLine: 'underline'
   },
   text: {
-    color: '#eee'
+    color: palette.text
   },
   container: {
     flex: 1,
-    backgroundColor: '#333'
+    backgroundColor: palette.background
   },
   main: {
     paddingVertical: 20
@@ -420,7 +412,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // Buttons stay on the last line as the field grows.
     alignItems: 'flex-end',
-    backgroundColor: '#333'
+    backgroundColor: palette.surface,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: palette.line
   },
   inputBox: {
     minHeight: 40,
@@ -431,9 +425,9 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'ios' ? 10 : 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    backgroundColor: colors.field,
-    color: colors.text,
+    borderColor: palette.line,
+    backgroundColor: palette.field,
+    color: palette.text,
     fontSize: 16,
     textAlignVertical: 'center'
   },
@@ -449,7 +443,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.accent
+    backgroundColor: palette.accent
   },
   sendDisabled: {
     opacity: 0.35

@@ -30,6 +30,7 @@ import type { NicklistModalHandle } from './buffers/ui/NicklistModal';
 import NicklistModal from './buffers/ui/NicklistModal';
 import type { RootStackParamList } from './Root';
 import { Snackbar } from './shared/Snackbar';
+import { palette } from './shared/palette';
 
 const connector = connect((state: StoreState) => {
   const currentBufferId = state.app.currentBufferId;
@@ -261,7 +262,7 @@ class App extends React.PureComponent<Props, State> {
                         style={[
                           styles.channelsButtonText,
                           hasHighlights && {
-                            color: '#ffcf7f'
+                            color: palette.highlight
                           }
                         ]}
                       >
@@ -291,7 +292,7 @@ class App extends React.PureComponent<Props, State> {
                         <MaterialIcons
                           name="people-alt"
                           size={22}
-                          color="white"
+                          color={palette.text}
                         />
                       </TouchableOpacity>
                     )}
@@ -302,7 +303,7 @@ class App extends React.PureComponent<Props, State> {
                       <MaterialCommunityIcons
                         name="account-wrench"
                         size={22}
-                        color="white"
+                        color={palette.text}
                       />
                     </TouchableOpacity>
                     {connected ? (
@@ -313,7 +314,7 @@ class App extends React.PureComponent<Props, State> {
                         <MaterialCommunityIcons
                           name="lan-disconnect"
                           size={22}
-                          color="white"
+                          color={palette.text}
                           accessibilityLabel="Connected"
                           accessibilityHint="Disconnect"
                         />
@@ -326,7 +327,7 @@ class App extends React.PureComponent<Props, State> {
                         <MaterialCommunityIcons
                           name="lan-pending"
                           size={22}
-                          color="white"
+                          color={palette.text}
                           accessibilityLabel="Connecting"
                           accessibilityHint="Disconnect"
                         />
@@ -339,7 +340,7 @@ class App extends React.PureComponent<Props, State> {
                         <MaterialCommunityIcons
                           name="lan-connect"
                           size={22}
-                          color="white"
+                          color={palette.text}
                           accessibilityLabel="Disconnected"
                           accessibilityHint="Connect"
                         />
@@ -378,7 +379,9 @@ export default connector(App);
 const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
-    backgroundColor: '#333',
+    backgroundColor: palette.surface,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: palette.line,
     alignItems: 'center'
   },
   channelsButtonWrapper: {
@@ -392,7 +395,7 @@ const styles = StyleSheet.create({
   },
   channelsButtonText: {
     fontSize: 20,
-    color: '#eee',
+    color: palette.text,
     fontWeight: 'bold'
   },
   topbarTextWrapper: {
@@ -400,7 +403,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   topbarText: {
-    color: '#eee',
+    color: palette.text,
     fontWeight: 'bold',
     fontSize: 15
   },
@@ -412,7 +415,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#333'
+    backgroundColor: palette.surface
   },
   snackbar: {
     alignItems: 'center',

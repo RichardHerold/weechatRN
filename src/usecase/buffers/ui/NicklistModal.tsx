@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native';
 import { useAppSelector } from '../../../store/hooks';
+import { palette } from '../../shared/palette';
 
 export type NicklistModalHandle = {
   show: () => void;
@@ -83,7 +84,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   modalView: {
-    backgroundColor: '#121212',
+    backgroundColor: palette.surface,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: palette.line,
     borderRadius: 20,
     padding: 10,
     shadowColor: '#000',
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   listItemText: {
-    color: '#eee',
+    color: palette.text,
     fontWeight: 'bold',
     fontSize: 15
   },

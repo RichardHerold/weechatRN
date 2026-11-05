@@ -10,6 +10,7 @@ import type { ParseShape } from 'react-native-parsed-text';
 import ParsedText from 'react-native-parsed-text';
 import { formatDate } from '../../../../lib/helpers/date-formatter';
 import { renderWeechatFormat } from '../../../../lib/weechat/color-formatter';
+import { palette } from '../../../shared/palette';
 
 interface Props {
   line: WeechatLine;
@@ -59,7 +60,7 @@ const BufferLine: React.FC<Props> = ({
           </Text>
         </View>
 
-        <Text style={[styles.text]}> {formatDate(line.date)}</Text>
+        <Text style={[styles.text, styles.time]}> {formatDate(line.date)}</Text>
       </View>
     </TouchableHighlight>
   );
@@ -69,7 +70,7 @@ export default BufferLine;
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2e3440',
+    backgroundColor: palette.background,
     paddingVertical: 5,
     paddingHorizontal: 10,
     flexDirection: 'row'
@@ -79,8 +80,11 @@ export const styles = StyleSheet.create({
   },
   text: {
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-    color: '#eee',
+    color: palette.text,
     fontSize: 14
+  },
+  time: {
+    color: palette.dim
   },
   highlight: {
     backgroundColor: 'magenta',

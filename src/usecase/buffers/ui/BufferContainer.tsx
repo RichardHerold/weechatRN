@@ -31,6 +31,7 @@ import { getParseArgs } from '../../../lib/helpers/parse-text-args';
 import { formatUrl } from '../../../lib/helpers/url-formatter';
 import type RelayClient from '../../../lib/weechat/client';
 import { renderWeechatFormat } from '../../../lib/weechat/color-formatter';
+import { cwf } from '../../../lib/weechat/colors';
 import { KeyCommandView } from '../../../native/KeyCommandView';
 import type { StoreState } from '../../../store';
 import * as actions from '../../../store/actions';
@@ -384,15 +385,16 @@ class BufferContainer extends React.PureComponent<Props, State> {
 
 export default connector(BufferContainer);
 
-// The field takes the message list's color so it reads as part of the chat,
-// and the send button uses the redesign's amber accent.
+// The field takes the message list's color so it reads as part of the chat.
+// The send button and caret use WeeChat's light cyan; amber stays reserved
+// for highlights.
 const colors = {
   field: '#2e3440',
   fieldBorder: '#4c566a',
   text: '#eceff4',
   placeholder: '#9aa3b2',
-  accent: '#f2b45c',
-  onAccent: '#1a1300'
+  accent: cwf.lightcyan,
+  onAccent: '#0b3b38'
 };
 
 const styles = StyleSheet.create({

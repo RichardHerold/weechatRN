@@ -221,8 +221,18 @@ export default class WeechatNative extends React.Component<null, State> {
                   </Stack.Screen>
                   <Stack.Screen
                     name="Connection Settings"
-                    component={ConnectionSettings}
-                  />
+                    options={{ title: 'Settings' }}
+                  >
+                    {(props) => (
+                      <ConnectionSettings
+                        {...props}
+                        connect={this.onConnect}
+                        disconnect={this.disconnect}
+                        connecting={connecting}
+                        connectionError={connectionError}
+                      />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="Media Upload Settings"
                     component={UploadSettings}

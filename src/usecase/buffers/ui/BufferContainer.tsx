@@ -147,10 +147,16 @@ class BufferContainer extends React.PureComponent<Props, State> {
   };
 
   handleSubmit = (event: TextInputSubmitEditingEvent) => {
-    if (!this.props.connected) return;
     if (event.nativeEvent.text === '') return;
+    this.sendTextValue();
+  };
+
+  sendTextValue = () => {
+    if (!this.props.connected) return;
 
     const { textValue } = this.state;
+    if (textValue === '') return;
+
     [textValue]
       .flatMap((v) => {
         return this.props.buffer.input_multiline ? v : v.split('\n');
@@ -267,9 +273,11 @@ class BufferContainer extends React.PureComponent<Props, State> {
       lines,
       client,
       mediaUploadOptions,
-      notification
+      notification,
+      connected
     } = this.props;
     const { textValue, showTabButton, needsAnimation } = this.state;
+    const canSend = connected && textValue !== '';
 
     return (
       <>
@@ -295,6 +303,11 @@ class BufferContainer extends React.PureComponent<Props, State> {
           />
 
           <View style={styles.bottomBox}>
+            <UploadButton
+              onUpload={this.handleOnUpload}
+              style={styles.iconButton}
+              uploadOptions={mediaUploadOptions}
+            />
             <KeyCommandView
               style={{ flex: 1 }}
               onShiftEnter={this.handleShiftEnter}
@@ -309,6 +322,12 @@ class BufferContainer extends React.PureComponent<Props, State> {
                 }
                 style={styles.inputBox}
                 value={textValue}
+                placeholder={
+                  buffer.short_name ? `Message ${buffer.short_name}` : 'Message'
+                }
+                placeholderTextColor={colors.placeholder}
+                selectionColor={colors.accent}
+                keyboardAppearance="dark"
                 onChangeText={this.handleChangeText}
                 onFocus={this.handleOnFocus}
                 onBlur={this.handleOnBlur}
@@ -322,29 +341,40 @@ class BufferContainer extends React.PureComponent<Props, State> {
                 accessibilityLabel="Buffer text field"
               />
             </KeyCommandView>
-            <Animated.View
-              layout={needsAnimation ? LinearTransition : undefined}
-            >
-              <UploadButton
-                onUpload={this.handleOnUpload}
-                style={styles.uploadButton}
-                uploadOptions={mediaUploadOptions}
-              />
-            </Animated.View>
             {showTabButton && (
               <TouchableOpacity
-                style={styles.tabButton}
+                style={styles.iconButton}
                 onPress={this.tabCompleteNick}
+                accessibilityRole="button"
+                accessibilityLabel="Complete nick"
               >
                 <AnimatedIcon
                   entering={FadeInRight}
                   exiting={FadeOutRight}
                   name="keyboard-tab"
-                  size={27}
+                  size={24}
                   color="white"
                 />
               </TouchableOpacity>
             )}
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={this.sendTextValue}
+              disabled={!canSend}
+              accessibilityRole="button"
+              accessibilityLabel="Send"
+              accessibilityState={{ disabled: !canSend }}
+            >
+              <View
+                style={[styles.sendCircle, !canSend && styles.sendDisabled]}
+              >
+                <MaterialIcons
+                  name="arrow-upward"
+                  size={20}
+                  color={colors.onAccent}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </>
@@ -353,6 +383,17 @@ class BufferContainer extends React.PureComponent<Props, State> {
 }
 
 export default connector(BufferContainer);
+
+// The field takes the message list's color so it reads as part of the chat,
+// and the send button uses the redesign's amber accent.
+const colors = {
+  field: '#2e3440',
+  fieldBorder: '#4c566a',
+  text: '#eceff4',
+  placeholder: '#9aa3b2',
+  accent: '#f2b45c',
+  onAccent: '#1a1300'
+};
 
 const styles = StyleSheet.create({
   topic: {
@@ -372,25 +413,43 @@ const styles = StyleSheet.create({
     paddingVertical: 20
   },
   bottomBox: {
-    paddingHorizontal: 10,
-    paddingVertical: 7.5,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    // Buttons stay on the last line as the field grows.
+    alignItems: 'flex-end',
     backgroundColor: '#333'
   },
   inputBox: {
-    maxHeight: 60.3,
-    padding: 5,
-    justifyContent: 'center',
-    borderColor: 'gray',
-    backgroundColor: '#fff'
+    minHeight: 40,
+    maxHeight: 120,
+    marginVertical: 2,
+    marginHorizontal: 4,
+    paddingHorizontal: 14,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.fieldBorder,
+    backgroundColor: colors.field,
+    color: colors.text,
+    fontSize: 16,
+    textAlignVertical: 'center'
   },
-  uploadButton: {
-    paddingLeft: 10
-  },
-  tabButton: {
+  iconButton: {
     width: 40,
-    paddingLeft: 10
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sendCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent
+  },
+  sendDisabled: {
+    opacity: 0.35
   }
 });

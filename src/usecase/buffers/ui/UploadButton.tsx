@@ -158,7 +158,7 @@ const UploadButton: React.FC<Props> = ({
   return (
     <MenuView actions={actions} onPressAction={handleOnPressAction}>
       <View style={style} accessibilityLabel="Upload Image">
-        <MaterialIcons name="attach-file" size={27} color="white" />
+        <MaterialIcons name="attach-file" size={24} color="white" />
       </View>
     </MenuView>
   );

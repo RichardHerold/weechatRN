@@ -39,7 +39,7 @@ const UploadSpinner: React.FC = () => {
   return (
     <AnimatedIcon
       name="loading"
-      size={27}
+      size={24}
       color="white"
       style={animatedStyles}
     />

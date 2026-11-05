@@ -23,6 +23,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import type { ParseShape } from 'react-native-parsed-text';
 import type RelayClient from '../../../lib/weechat/client';
 import BufferLine from './BufferLine';
+import { palette } from '../../shared/palette';
 import { styles as lineStyles } from './themes/Default';
 
 interface Props {
@@ -262,7 +263,7 @@ const Buffer = ({
         <View style={styles.jumpToUnreadWrapper}>
           <View ref={jumpToUnreadButton} style={styles.jumpToUnread}>
             <Text
-              style={{ color: '#fff' }}
+              style={{ color: palette.text }}
               accessibilityLabel="Scroll to unread"
               onPress={() => {
                 const index = lines.findIndex(
@@ -289,7 +290,7 @@ const Buffer = ({
           <MaterialIcons
             name="keyboard-arrow-down"
             size={44}
-            color="#fff"
+            color={palette.text}
             onPress={() => {
               linesList.current?.scrollToTop({ animated: true });
             }}
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   list: {
-    backgroundColor: '#2e3440'
+    backgroundColor: palette.background
   },
   scrollToEndButton: {
     position: 'absolute',
@@ -321,7 +322,9 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: '50%',
-    backgroundColor: '#222',
+    backgroundColor: palette.field,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: palette.line,
     overflow: 'hidden'
   },
   jumpToUnreadWrapper: {
@@ -333,7 +336,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   jumpToUnread: {
-    backgroundColor: '#222',
+    backgroundColor: palette.field,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     padding: 10,

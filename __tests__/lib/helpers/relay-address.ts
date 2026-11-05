@@ -77,11 +77,24 @@ describe('normalizeRelayAddress', () => {
     });
     expect(result).toEqual({
       ok: true,
-      address: { hostname: 'example.com', path: '/~user/weechat', ssl: true },
+      address: { hostname: 'example.com', path: '/~user/weechat/', ssl: true },
       notes: [
         'Removed https:// from the address.',
-        'Moved /~user/weechat to Path.'
+        'Moved /~user/weechat/ to Path.'
       ]
+    });
+  });
+
+  it('keeps a trailing slash in an explicit path', () => {
+    const result = normalizeRelayAddress({
+      hostname: 'relay.example.com',
+      path: '/relay/',
+      ssl: true
+    });
+    expect(result).toEqual({
+      ok: true,
+      address: { hostname: 'relay.example.com', path: '/relay/', ssl: true },
+      notes: []
     });
   });
 

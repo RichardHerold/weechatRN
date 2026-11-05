@@ -10,9 +10,6 @@ export type NormalizedRelayAddress =
 
 const SCHEME = /^([a-z][a-z0-9+.-]*):\/\//i;
 
-const trimTrailingSlashes = (path: string): string =>
-  path.length > 1 ? path.replace(/\/+$/, '') || '/' : path;
-
 /**
  * Cleans up what people paste into the relay address field.
  *
@@ -56,9 +53,11 @@ export const normalizeRelayAddress = (
     }
   }
 
+  // Paths keep any trailing slash: a proxy routing `location /relay/` does
+  // not serve `/relay`, so `/relay/` and `/relay` are different relays.
   const slash = hostname.indexOf('/');
   if (slash >= 0) {
-    const pathInAddress = trimTrailingSlashes(hostname.slice(slash));
+    const pathInAddress = hostname.slice(slash);
     hostname = hostname.slice(0, slash);
     if (pathInAddress !== '/' && pathInAddress !== path) {
       if (path) {
@@ -73,7 +72,6 @@ export const normalizeRelayAddress = (
   }
 
   if (path && !path.startsWith('/')) path = `/${path}`;
-  path = trimTrailingSlashes(path);
 
   let parsed: URL;
   try {

@@ -346,4 +346,92 @@ describe('BufferContainer', () => {
       'world!'
     );
   });
+
+  describe('message field', () => {
+    const bufferId = '86c417600';
+
+    const renderContainer = async ({ connected }: { connected: boolean }) => {
+      const store = configureStore({
+        reducer,
+        preloadedState: {
+          buffers: {
+            [bufferId]: {
+              _id: '1730555173010842',
+              full_name: 'irc.libera.#weechat',
+              hidden: 0,
+              id: bufferId,
+              local_variables: {
+                channel: '#weechat',
+                name: 'libera.#weechat',
+                plugin: 'irc',
+                type: 'channel'
+              },
+              notify: 'all',
+              number: 2,
+              pointers: [bufferId],
+              short_name: '#weechat',
+              title: '',
+              type: 0
+            }
+          },
+          app: { connected, currentBufferId: bufferId } as AppState
+        },
+        enhancers: (getDefaultEnhancers) =>
+          getDefaultEnhancers({ autoBatch: false })
+      });
+      const client = new RelayClient(jest.fn(), jest.fn(), jest.fn());
+      client.sendMessageToBuffer = jest.fn();
+
+      await render(
+        <BufferContainer
+          bufferId={bufferId}
+          showTopic={false}
+          client={client}
+        />,
+        { store }
+      );
+
+      return client;
+    };
+
+    it('names the buffer in the empty field', async () => {
+      await renderContainer({ connected: true });
+
+      expect(screen.getByPlaceholderText('Message #weechat')).toBeOnTheScreen();
+    });
+
+    it('sends with the send button and clears the field', async () => {
+      const client = await renderContainer({ connected: true });
+      const textInput = screen.getByLabelText('Buffer text field');
+      const send = screen.getByRole('button', { name: 'Send' });
+
+      expect(send).toBeDisabled();
+
+      await fireEvent(textInput, 'onChangeText', 'Hello, world!');
+      expect(send).toBeEnabled();
+
+      await fireEvent.press(send);
+
+      expect(client.sendMessageToBuffer).toHaveBeenCalledWith(
+        { bufferId },
+        'Hello, world!'
+      );
+      expect(textInput.props.value).toEqual('');
+      expect(send).toBeDisabled();
+    });
+
+    it('keeps the send button off while disconnected', async () => {
+      const client = await renderContainer({ connected: false });
+      const textInput = screen.getByLabelText('Buffer text field');
+      const send = screen.getByRole('button', { name: 'Send' });
+
+      await fireEvent(textInput, 'onChangeText', 'Hello, world!');
+      expect(send).toBeDisabled();
+
+      await fireEvent.press(send);
+
+      expect(client.sendMessageToBuffer).not.toHaveBeenCalled();
+      expect(textInput.props.value).toEqual('Hello, world!');
+    });
+  });
 });
